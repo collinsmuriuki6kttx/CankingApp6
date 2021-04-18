@@ -54,7 +54,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn3:
                 StringBuffer buffer = new StringBuffer();
-                String filename = sd.toString() + "/newFile";
+                String filename = this.getExternalCacheDir() + "/testa";
+                File fileC = this.getExternalFilesDir(android.os.Environment.DIRECTORY_MUSIC);
+                File fileD = this.getExternalFilesDir(android.os.Environment.DIRECTORY_ALARMS);
+
+                buffer.append("fileMusic:" + fileC.toString()+" read:"+fileC.canRead()+" write:"+fileC.canWrite()+"\n");
+                buffer.append("fileAlarms:" + fileD.toString()+" read:"+fileD.canRead()+" fileD:"+fileC.canWrite()+"\n");
+
                 File newFile = new File(filename);
                 if (newFile.exists()) {
                     boolean d = newFile.delete();
