@@ -52,6 +52,7 @@ public class PermissionUtils {
 
 
     private static void requestPermissionsWrapper(Object cxt, String[] permission, int requestCode) {
+
         if (cxt instanceof Activity) {
             Activity activity = (Activity) cxt;
             ActivityCompat.requestPermissions(activity, permission, requestCode);
