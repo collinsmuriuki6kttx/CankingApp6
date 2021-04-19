@@ -146,6 +146,37 @@
                 android:layout_height="1dp"
                 android:layout_margin="8dp"
                 android:background="#ffffffff" />
+
+            <TextView
+                android:id="@+id/btn7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                style="@android:style/Widget.Button"
+                android:onClick="onClick"
+                android:text="new A" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="8dp"
+                android:background="#ffffffff" />
+            <TextView
+                android:id="@+id/btn8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                style="@android:style/Widget.Button"
+                android:onClick="onClick"
+                android:text="new B" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="8dp"
+                android:background="#ffffffff" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

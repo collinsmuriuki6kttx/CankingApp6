@@ -2,15 +2,18 @@ package com.canking.sdcardhelper;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,20 +26,48 @@ public class MainActivity extends AppCompatActivity {
                 .equals(android.os.Environment.MEDIA_MOUNTED);
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText("has SdCard:" + sdCardExist + " \n getExternalStorageState:" + Environment.getExternalStorageState() + "\n不需要任何权限");
+        test();
     }
+
+    public void test(TextView... v) {
+        Log.d("changxing", "V:" + v.length);
+    }
+
+    static HashMap<Integer, String> m;
 
     @TargetApi(23)
     public void onClick(View v) {
+//        String tb = "/gangyun/tmp";
+//        int testH = test.hashCode();
+//        int tbH = tb.hashCode();
+        TextView textView = (TextView) findViewById(R.id.text1);
+        String testa = new String("/gangyun/.themes");
+
+        long now = System.currentTimeMillis();
+        for (int i = 0; i <= 100000; i++) {
+            DigestEncodingUtils.computeMd5HexString(testa);
+        }
+        long now1 = System.currentTimeMillis() - now;
+        now = System.currentTimeMillis();
+        for (int i = 0; i <= 100000; i++) {
+            String test = new String("/gangyun/.themes");
+            test.hashCode();
+        }
+        long now2 = System.currentTimeMillis() - now;
+
+
+        textView.setText("testH:" + now1 +
+                "\ntbH:" + now2 + 100 / 200);
         File sd = Environment.getExternalStorageDirectory();
         int id = v.getId();
         switch (id) {
             case R.id.btn1:
                 File sdcard = Environment.getExternalStorageDirectory();
-                TextView textView = (TextView) findViewById(R.id.text1);
-                textView.setText("getExternalStorageDirectory:" + sdcard +
-                        "\ngetAbsolutePath:" + sdcard.getAbsolutePath() +
-                        "\ncanRead:" + sdcard.canRead() + " canWrite:" + sdcard.canWrite() +
-                        "\n不需要任何权限");
+//                TextView textView = (TextView) findViewById(R.id.text1);
+//                textView.setText("getExternalStorageDirectory:" + sdcard +
+//                        "\ngetAbsolutePath:" + sdcard.getAbsolutePath() +
+//                        "\ncanRead:" + sdcard.canRead() + " canWrite:" + sdcard.canWrite() +
+//                        "\n不需要任何权限");
                 break;
             case R.id.btn2:
                 TextView textView2 = (TextView) findViewById(R.id.text2);
@@ -75,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     buffer.append("newFile not exists\n");
                     try {
                         boolean t = newFile.createNewFile();
+                        newFile.mkdirs();
                         buffer.append("newFile create:" + t);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -83,12 +115,15 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 File filenameSDF = new File(filenameSD);
+
+
                 if (filenameSDF.exists()) {
                     boolean d = filenameSDF.delete();
                     buffer.append("\nfilenameSD: newFile exists, and Delete:" + d);
                 } else {
                     buffer.append("\nfilenameSD: newFile not exists\n");
                     try {
+                        //buffer.append("filenameSD:list file:" + filenameSDF.listFiles().length);
                         boolean t = filenameSDF.createNewFile();
                         buffer.append("filenameSD: newFile create:" + t);
                     } catch (Exception e) {
@@ -100,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 textView3.setText(buffer);
                 break;
             case R.id.btn4:
-                boolean read = PermissionUtils.checkSelfPermissionWrapper(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-                boolean write = PermissionUtils.checkSelfPermissionWrapper(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                boolean read = PermissionUtils.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                boolean write = PermissionUtils.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 TextView textView4 = (TextView) findViewById(R.id.text4);
                 textView4.setText("App Read:" + read + " Write:" + write);
                 break;
@@ -138,6 +173,14 @@ public class MainActivity extends AppCompatActivity {
                 TextView textView6 = (TextView) findViewById(R.id.text6);
                 textView6.setText("delete read:\n" + bufferd);
 
+                break;
+            case R.id.btn7:
+                Intent i = new Intent(this, ActivityA.class);
+                startActivity(i);
+                break;
+            case R.id.btn8:
+                Intent b = new Intent(this, ActivityB.class);
+                startActivity(b);
                 break;
         }
     }

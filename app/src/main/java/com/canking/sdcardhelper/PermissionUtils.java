@@ -17,6 +17,7 @@ package com.canking.sdcardhelper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -37,13 +38,19 @@ public class PermissionUtils {
     public static final int PERMISSION_SETTING_REQ_CODE = 0x1000;
 
     @TargetApi(Build.VERSION_CODES.M)
-    public static boolean checkPermission(Object cxt, String permission, int requestCode) {
-        if (!checkSelfPermissionWrapper(cxt, permission)) {
-            if (!shouldShowRequestPermissionRationaleWrapper(cxt, permission)) {
-                requestPermissionsWrapper(cxt, new String[]{permission}, requestCode);
-            } else {
-                Log.d(TAG, "should show rational");
-            }
+    public static boolean checkPermission(Activity cxt, String permission, int requestCode) {
+        Log.d(TAG, "checkPermission");
+
+        if (!checkSelfPermission(cxt, permission)) {//Context is ok
+
+            requestPermissionsWrapper(cxt, requestCode, permission);
+            Log.d(TAG, "requestPermissionsWrapper");
+
+//            if (!shouldShowRequestPermissionRationaleWrapper(cxt, permission)) { //Activity
+//                requestPermissionsWrapper(cxt, new String[]{permission}, requestCode);
+//            } else {
+//                Log.d(TAG, "should show rational");
+//            }
             return false;
         }
 
@@ -51,17 +58,8 @@ public class PermissionUtils {
     }
 
 
-    private static void requestPermissionsWrapper(Object cxt, String[] permission, int requestCode) {
-
-        if (cxt instanceof Activity) {
-            Activity activity = (Activity) cxt;
-            ActivityCompat.requestPermissions(activity, permission, requestCode);
-        } else if (cxt instanceof Fragment) {
-            Fragment fragment = (Fragment) cxt;
-            fragment.requestPermissions(permission, requestCode);
-        } else {
-            throw new RuntimeException("cxt is net a activity or fragment");
-        }
+    public static void requestPermissionsWrapper(Activity cxt, int requestCode, String... permission) {
+        ActivityCompat.requestPermissions(cxt, permission, requestCode);
     }
 
 
@@ -79,23 +77,15 @@ public class PermissionUtils {
     }
 
     @TargetApi(23)
-    public static boolean checkSelfPermissionWrapper(Object cxt, String permission) {
-        if (cxt instanceof Activity) {
-            Activity activity = (Activity) cxt;
-            return ActivityCompat.checkSelfPermission(activity,
-                    permission) == PackageManager.PERMISSION_GRANTED;
-        } else if (cxt instanceof Fragment) {
-            Fragment fragment = (Fragment) cxt;
-            return fragment.getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            throw new RuntimeException("cxt is net a activity or fragment");
-        }
+    public static boolean checkSelfPermission(Activity cxt, String permission) {
+        return ActivityCompat.checkSelfPermission(cxt,
+                permission) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private static String[] checkSelfPermissionArray(Object cxt, String[] permission) {
+    private static String[] checkSelfPermissionArray(Activity cxt, String[] permission) {
         ArrayList<String> permiList = new ArrayList<>();
         for (String p : permission) {
-            if (!checkSelfPermissionWrapper(cxt, p)) {
+            if (!checkSelfPermission(cxt, p)) {
                 permiList.add(p);
             }
         }
@@ -104,10 +94,10 @@ public class PermissionUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public static boolean checkPermissionArray(Object cxt, String[] permission, int requestCode) {
+    public static boolean checkPermissionArray(Activity cxt, String[] permission, int requestCode) {
         String[] permissionNo = checkSelfPermissionArray(cxt, permission);
         if (permissionNo.length > 0) {
-            requestPermissionsWrapper(cxt, permissionNo, requestCode);
+            requestPermissionsWrapper(cxt, requestCode, permissionNo);
             return false;
         } else return true;
     }
@@ -135,30 +125,17 @@ public class PermissionUtils {
      * @return
      */
     @TargetApi(23)
-    public static boolean checkSettingAlertPermission(Object cxt, int req) {
-        if (cxt instanceof Activity) {
-            Activity activity = (Activity) cxt;
-            if (!Settings.canDrawOverlays(activity.getBaseContext())) {
-                Log.i(TAG, "Setting not permission");
+    public static <C extends Context> boolean checkSettingAlertPermission(Activity cxt, int req,C t) {
+        Activity activity = (Activity) cxt;
+        if (!Settings.canDrawOverlays(activity.getBaseContext())) {
+            Log.i(TAG, "Setting not permission");
 
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + activity.getPackageName()));
-                activity.startActivityForResult(intent, req);
-                return false;
-            }
-        } else if (cxt instanceof Fragment) {
-            Fragment fragment = (Fragment) cxt;
-            if (!Settings.canDrawOverlays(fragment.getActivity())) {
-                Log.i(TAG, "Setting not permission");
-
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + fragment.getActivity().getPackageName()));
-                fragment.startActivityForResult(intent, req);
-                return false;
-            }
-        } else {
-            throw new RuntimeException("cxt is net a activity or fragment");
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + activity.getPackageName()));
+            activity.startActivityForResult(intent, req);
+            return false;
         }
+
 
         return true;
     }
