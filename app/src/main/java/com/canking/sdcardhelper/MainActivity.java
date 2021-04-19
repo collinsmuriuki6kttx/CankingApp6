@@ -40,34 +40,38 @@ public class MainActivity extends AppCompatActivity {
 //        String tb = "/gangyun/tmp";
 //        int testH = test.hashCode();
 //        int tbH = tb.hashCode();
-        TextView textView = (TextView) findViewById(R.id.text1);
-        String testa = new String("/gangyun/.themes");
-
-        long now = System.currentTimeMillis();
-        for (int i = 0; i <= 100000; i++) {
-            DigestEncodingUtils.computeMd5HexString(testa);
-        }
-        long now1 = System.currentTimeMillis() - now;
-        now = System.currentTimeMillis();
-        for (int i = 0; i <= 100000; i++) {
-            String test = new String("/gangyun/.themes");
-            test.hashCode();
-        }
-        long now2 = System.currentTimeMillis() - now;
-
-
-        textView.setText("testH:" + now1 +
-                "\ntbH:" + now2 + 100 / 200);
+//        TextView textView = (TextView) findViewById(R.id.text1);
+//        String testa = new String("/gangyun/.themes");
+//
+//        long now = System.currentTimeMillis();
+//        for (int i = 0; i <= 100000; i++) {
+//            DigestEncodingUtils.computeMd5HexString(testa);
+//        }
+//        long now1 = System.currentTimeMillis() - now;
+//        now = System.currentTimeMillis();
+//        for (int i = 0; i <= 100000; i++) {
+//            String test = new String("/gangyun/.themes");
+//            test.hashCode();
+//        }
+//        long now2 = System.currentTimeMillis() - now;
+//
+//
+//        textView.setText("testH:" + now1 +
+//                "\ntbH:" + now2 + 100 / 200);
         File sd = Environment.getExternalStorageDirectory();
         int id = v.getId();
         switch (id) {
             case R.id.btn1:
                 File sdcard = Environment.getExternalStorageDirectory();
-//                TextView textView = (TextView) findViewById(R.id.text1);
-//                textView.setText("getExternalStorageDirectory:" + sdcard +
-//                        "\ngetAbsolutePath:" + sdcard.getAbsolutePath() +
-//                        "\ncanRead:" + sdcard.canRead() + " canWrite:" + sdcard.canWrite() +
-//                        "\n不需要任何权限");
+                Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+
+
+                TextView textViewx = (TextView) findViewById(R.id.text1);
+                textViewx.setText("getExternalStorageDirectory:" + sdcard +
+                        "\ngetAbsolutePath:" + sdcard.getAbsolutePath() +
+                        "\ncanRead:" + sdcard.canRead() + " canWrite:" + sdcard.canWrite() +
+                        "\n不需要任何权限 \nSDstate:" +
+                        Environment.getExternalStorageState());
                 break;
             case R.id.btn2:
                 TextView textView2 = (TextView) findViewById(R.id.text2);
