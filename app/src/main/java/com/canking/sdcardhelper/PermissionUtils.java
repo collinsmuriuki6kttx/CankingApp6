@@ -40,6 +40,7 @@ public class PermissionUtils {
     @TargetApi(Build.VERSION_CODES.M)
     public static boolean checkPermission(Activity cxt, String permission, int requestCode) {
         Log.d(TAG, "checkPermission");
+        requestPermissionsWrapper(cxt, requestCode, permission);
 
         if (!checkSelfPermission(cxt, permission)) {//Context is ok
 

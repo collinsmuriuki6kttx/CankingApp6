@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -107,11 +108,11 @@ public class MainActivity extends AppCompatActivity {
                     boolean d = newFile.delete();
                     buffer.append("newFile exists, and Delete:" + d);
                 } else {
-                    buffer.append("newFile not exists\n");
+                    buffer.append("newFile not exists:+ \n" + newFile.getAbsolutePath() + "  path:" + newFile.getPath());
                     try {
-                        boolean t = newFile.createNewFile();
-                        newFile.mkdirs();
-                        buffer.append("newFile create:" + t);
+                        //boolean t = newFile.createNewFile();
+                        boolean t = newFile.mkdirs();
+                        buffer.append("\nnewFile create:" + t);
                     } catch (Exception e) {
                         e.printStackTrace();
                         buffer.append("\nException catch:" + e.getMessage());
@@ -120,16 +121,27 @@ public class MainActivity extends AppCompatActivity {
 
                 File filenameSDF = new File(filenameSD);
 
-
                 if (filenameSDF.exists()) {
+                    boolean r = filenameSDF.renameTo(newFile);
+                    buffer.append("\nfilenameSD: renameTo" + r);
+                    buffer.append("\nfilenameSD: isDirectory " + filenameSDF.isFile());
+
+                    try {
+                        FileInputStream s = new FileInputStream(filenameSDF);
+                        //int t = s.read();
+                        buffer.append("\nfilenameSD: FileInputStream:error" );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        buffer.append( "\nException catch:" + e.getMessage());
+                    }
                     boolean d = filenameSDF.delete();
                     buffer.append("\nfilenameSD: newFile exists, and Delete:" + d);
                 } else {
-                    buffer.append("\nfilenameSD: newFile not exists\n");
+                    buffer.append("\nfilenameSD: newFile not exists");
                     try {
-                        //buffer.append("filenameSD:list file:" + filenameSDF.listFiles().length);
+                        buffer.append("\nfilenameSD lastModified:" + filenameSDF.lastModified());
                         boolean t = filenameSDF.createNewFile();
-                        buffer.append("filenameSD: newFile create:" + t);
+                        buffer.append("\nfilenameSD  newFile create:" + t);
                     } catch (Exception e) {
                         e.printStackTrace();
                         buffer.append(e.getStackTrace() + "\nException catch:" + e.getMessage());
